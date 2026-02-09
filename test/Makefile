@@ -7,9 +7,16 @@
 TOPLEVEL_LANG ?= verilog
 
 # export PYTHONPATH := $(PWD)/../model:$(PYTHONPATH)
+export PYTHONDONTWRITEBYTECODE := 1
+
+AUX_DIR := ../out/aux
 
 VERILOG_SOURCES = $(wildcard ../src/*.v)
-COCOTB_TOPLEVEL     := $(notdir $(basename $(VERILOG_SOURCES)))
-COCOTB_TEST_MODULES := $(notdir $(basename $(wildcard ./*.py)))
+COCOTB_TOPLEVEL := $(MOD)
+COCOTB_TEST_MODULES := test_$(MOD)
+
+COCOTB_RESULTS_FILE := $(AUX_DIR)/results.xml
+SIM_BUILD := $(AUX_DIR)/sim_build
+
 
 include $(shell cocotb-config --makefiles)/Makefile.sim

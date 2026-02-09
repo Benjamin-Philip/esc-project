@@ -1,0 +1,67 @@
+module add8 (
+    input  [7:0] a,
+    input  [7:0] b,
+    input        cin,
+    output [7:0] sum,
+    output       cout
+);
+
+   wire [6:0] carry;
+
+   add1 bit0 (
+       a[0],
+       b[0],
+       cin,
+       sum[0],
+       carry[0]
+   );
+   add1 bit1 (
+       a[1],
+       b[1],
+       carry[0],
+       sum[1],
+       carry[1]
+   );
+   add1 bit2 (
+       a[2],
+       b[2],
+       carry[1],
+       sum[2],
+       carry[2]
+   );
+   add1 bit3 (
+       a[3],
+       b[3],
+       carry[2],
+       sum[3],
+       carry[3]
+   );
+   add1 bit4 (
+       a[4],
+       b[4],
+       carry[3],
+       sum[4],
+       carry[4]
+   );
+   add1 bit5 (
+       a[5],
+       b[5],
+       carry[4],
+       sum[5],
+       carry[5]
+   );
+   add1 bit6 (
+       a[6],
+       b[6],
+       carry[5],
+       sum[6],
+       carry[6]
+   );
+   add1 bit7 (
+       a[7],
+       b[7],
+       carry[6],
+       sum[7],
+       cout
+   );
+endmodule

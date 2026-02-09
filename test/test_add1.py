@@ -22,7 +22,7 @@ async def test_case(dut, a, b, cin):
     sum = result[-1]
     cout = result[-2]
 
-    cocotb.log.info(f"{a=}, {b=}, {cin=}, {sum=}, {cout=}, {result=}")
+    cocotb.log.debug(f"{a=}, {b=}, {cin=}, {sum=}, {cout=}, {result=}")
 
     assert dut.sum.value == sum
     assert dut.cout.value == cout

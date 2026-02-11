@@ -15,8 +15,8 @@ VERILOG_SOURCES = $(wildcard ../src/*.v)
 COCOTB_TOPLEVEL := $(MOD)
 COCOTB_TEST_MODULES := test_$(MOD)
 
-COCOTB_RESULTS_FILE := $(AUX_DIR)/results.xml
-SIM_BUILD := $(AUX_DIR)/sim_build
+COCOTB_RESULTS_FILE := $(AUX_DIR)/$(MOD)/results.xml
+SIM_BUILD := $(AUX_DIR)/$(MOD)/sim_build
 
 
 include $(shell cocotb-config --makefiles)/Makefile.sim

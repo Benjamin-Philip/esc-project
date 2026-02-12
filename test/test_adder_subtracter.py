@@ -24,7 +24,8 @@ async def test_case(dut, a, b, sub):
     sum = bin(val)[2:].zfill(64)[-64:]
 
     result = str(dut.sum.value)
-    cocotb.log.debug(f"{a=}, {b=}, {sub=}, {sum=}, {result=}, {str(dut.sum.value)}")
+    status = result == sum
+    cocotb.log.debug(f"{a=}; {b=}, {sub=}, {sum=}, {result=}, {status=}")
 
     assert result == sum
 

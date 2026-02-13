@@ -17,7 +17,7 @@ rtl: $(foreach mod, $(MODULES), $(IMG_DIR)/$(mod)-rtl.pdf)
 
 $(WAVES_DIR)/%.fst: $(VERILOG_SOURCES) test/test_%.py
 	$(MAKE) -C test MOD=$* WAVES=1
-	-mkdir -p $(WAVES_DIR)
+	@mkdir -p $(WAVES_DIR)
 	cp $(AUX_DIR)/cocotb/$*/sim_build/$*.fst $@
 
 %.vcd: %.fst
@@ -37,14 +37,15 @@ $(WAVES_DIR)/%.svg: $(WAVES_DIR)/%.json
 	wavedrom-cli -i $< -s $@
 
 $(IMG_DIR)/%-waves.pdf: $(WAVES_DIR)/%.svg
-	inkscape --export-type=pdf --export-filename=$@ $< 
+	@mkdir -p $(IMG_DIR)
+	rsvg-convert -f pdf -o $@ $<
 
 #######
 # RTL #
 #######
 
 $(RTL_DIR)/%.json: $(VERILOG_SOURCES)
-	-mkdir -p $(RTL_DIR)
+	@mkdir -p $(RTL_DIR)
 	yosys -p "prep -top $*; opt_clean; write_json -selected $@" $(VERILOG_SOURCES)
 
 $(RTL_DIR)/adder_subtracter.svg: $(RTL_DIR)/adder_subtracter.json
@@ -56,7 +57,8 @@ $(RTL_DIR)/%.svg: $(RTL_DIR)/%.json
 	netlistsvg $< -o $@
 
 $(IMG_DIR)/%-rtl.pdf: $(RTL_DIR)/%.svg
-	inkscape --export-type=pdf --export-filename=$@ $< 
+	@mkdir -p $(IMG_DIR)
+	rsvg-convert -f pdf -o $@ $<
 
 
 .PHONY: clean

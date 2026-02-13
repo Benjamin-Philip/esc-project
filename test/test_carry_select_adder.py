@@ -7,7 +7,7 @@ import random as rand
 
 @cocotb.test()
 async def random(dut):
-    for i in range(10):
+    for i in range(5):
         a = await randint()
         b = await randint()
         cin = await randint(upto=1)

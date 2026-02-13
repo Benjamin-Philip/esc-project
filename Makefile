@@ -8,13 +8,40 @@ RTL_DIR := $(AUX_DIR)/rtl
 IMG_DIR := $(OUT_DIR)/img
 
 all: waves rtl
-waves: $(foreach mod, $(MODULES), $(WAVES_DIR)/$(mod).fst)
-rtl: $(foreach mod, $(MODULES), $(IMG_DIR)/$(mod).pdf)
+waves: $(foreach mod, $(MODULES), $(IMG_DIR)/$(mod)-waves.pdf)
+rtl: $(foreach mod, $(MODULES), $(IMG_DIR)/$(mod)-rtl.pdf)
+
+#########
+# Waves #
+#########
 
 $(WAVES_DIR)/%.fst: $(VERILOG_SOURCES) test/test_%.py
 	$(MAKE) -C test MOD=$* WAVES=1
 	-mkdir -p $(WAVES_DIR)
 	cp $(AUX_DIR)/cocotb/$*/sim_build/$*.fst $@
+
+%.vcd: %.fst
+	fst2vcd -f $< -o $@
+
+$(WAVES_DIR)/%.json: $(WAVES_DIR)/%.vcd
+	python -m vcd2wavedrom.vcd2wavedrom -i $< -o $@
+	jq 'del(.signal[] | select(.name | test(".*\\..*\\.")))' $@ > $@.tmp
+	mv $@.tmp $@
+
+$(WAVES_DIR)/adder_subtracter.json: $(WAVES_DIR)/adder_subtracter.vcd
+	python -m vcd2wavedrom.vcd2wavedrom -i $< -o $@
+	jq 'del(.signal[] | select(.name | test(".*\\..*\\."))) | .config.hscale = 4' $@ > $@.tmp
+	mv $@.tmp $@
+
+$(WAVES_DIR)/%.svg: $(WAVES_DIR)/%.json
+	wavedrom-cli -i $< -s $@
+
+$(IMG_DIR)/%-waves.pdf: $(WAVES_DIR)/%.svg
+	inkscape --export-type=pdf --export-filename=$@ $< 
+
+#######
+# RTL #
+#######
 
 $(RTL_DIR)/%.json: $(VERILOG_SOURCES)
 	-mkdir -p $(RTL_DIR)
@@ -25,10 +52,10 @@ $(RTL_DIR)/adder_subtracter.svg: $(RTL_DIR)/adder_subtracter.json
 	sed -i 's/0x0/0/g' $@
 	sed -i 's/0x10000000000000000/1/g' $@
 
-%.svg: %.json
+$(RTL_DIR)/%.svg: $(RTL_DIR)/%.json
 	netlistsvg $< -o $@
 
-$(IMG_DIR)/%.pdf: $(RTL_DIR)/%.svg
+$(IMG_DIR)/%-rtl.pdf: $(RTL_DIR)/%.svg
 	inkscape --export-type=pdf --export-filename=$@ $< 
 
 

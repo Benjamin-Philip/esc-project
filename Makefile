@@ -28,7 +28,7 @@ $(WAVES_DIR)/%.json: $(WAVES_DIR)/%.vcd
 	jq 'del(.signal[] | select(.name | test(".*\\..*\\.")))' $@ > $@.tmp
 	mv $@.tmp $@
 
-$(WAVES_DIR)/adder_subtracter.json: $(WAVES_DIR)/adder_subtracter.vcd
+$(WAVES_DIR)/adder_subtractor.json: $(WAVES_DIR)/adder_subtractor.vcd
 	python -m vcd2wavedrom.vcd2wavedrom -i $< -o $@
 	jq 'del(.signal[] | select(.name | test(".*\\..*\\."))) | .config.hscale = 4' $@ > $@.tmp
 	mv $@.tmp $@
@@ -48,7 +48,7 @@ $(RTL_DIR)/%.json: $(VERILOG_SOURCES)
 	@mkdir -p $(RTL_DIR)
 	yosys -p "prep -top $*; opt_clean; write_json -selected $@" $(VERILOG_SOURCES)
 
-$(RTL_DIR)/adder_subtracter.svg: $(RTL_DIR)/adder_subtracter.json
+$(RTL_DIR)/adder_subtractor.svg: $(RTL_DIR)/adder_subtractor.json
 	netlistsvg $< -o $@
 	sed -i 's/0x0/0/g' $@
 	sed -i 's/0x10000000000000000/1/g' $@

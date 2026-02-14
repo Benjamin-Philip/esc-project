@@ -1,4 +1,4 @@
-module adder_subtracter (
+module adder_subtractor (
     input [63:0] a,
     input [63:0] b,
     input sub,

@@ -10,6 +10,14 @@ IMG_DIR := $(OUT_DIR)/img
 all: waves rtl
 waves: $(foreach mod, $(MODULES), $(IMG_DIR)/$(mod)-waves.pdf)
 rtl: $(foreach mod, $(MODULES), $(IMG_DIR)/$(mod)-rtl.pdf)
+all: $(OUT_DIR)/paper.pdf
+
+#########
+# Paper #
+#########
+
+$(OUT_DIR)/paper.pdf: paper.md waves rtl
+	pandoc --lua-filter=include-code-files.lua -f markdown -t pdf -o $@ $<
 
 #########
 # Waves #

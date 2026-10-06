@@ -19,6 +19,11 @@ abstract: |
     well  as area, and  power efficiency. Verified through Icarus Verilog and CocoTB,
     the module provides a scalable and robust solution for large-integer arithmetic in modern
     64-bit processors.
+# documentclass: extreport
+# classoption:
+#     - 14pt
+#     - a4paper
+#     - twoside
 geometry: margin=1in
 ---
 # 1-bit Adder
